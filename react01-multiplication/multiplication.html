@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiplication</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  </head>
+  <body style="background-color: gray">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const Input = ({ addNum }) => {
+        const [inputNumber, setInputNumber] = React.useState(0);
+
+        const calcNum = () => {
+          if (inputNumber.trim() !== "") {
+            const results = [];
+            const reset = () => {
+              setInputNumber("");
+            };
+            for (let i = 1; i <= 9; i++) {
+              results.push(inputNumber * i);
+            }
+            addNum({ num: inputNumber, res: results });
+            reset();
+          }
+        };
+
+        const handleKeyUp = (event) => {
+          if (event.key === "Enter") calcNum();
+        };
+
+        return (
+          <div>
+            <input
+              type="number"
+              value={inputNumber}
+              onChange={(event) => setInputNumber(event.target.value)}
+              onKeyUp={handleKeyUp}
+              autoFocus
+            />
+            <button
+              type="button"
+              onClick={calcNum}
+              style={{
+                backgroundColor: "black",
+                color: "white",
+                padding: "6px 10px",
+                borderRadius: 10,
+                marginLeft: "10px",
+                border: 2,
+              }}
+            >
+              짜란
+            </button>
+          </div>
+        );
+      };
+
+      const Calc = ({ addNum, multiNumber }) => {
+        return (
+          <ul>
+            <Input addNum={addNum} />
+            {multiNumber.map((item) => (
+              <ul key={item.num}>
+                {item.res.map((number, index) => (
+                  <li key={number}>
+                    {item.num} x {index + 1} = {number}
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </ul>
+        );
+      };
+
+      const App = () => {
+        const [multiNumber, setNumber] = React.useState([]);
+
+        function addNum(num) {
+          // 데이터 갱신(상태 변경)
+          console.log(num);
+          setNumber([num]);
+        }
+
+        return (
+          <div>
+            <h1>Multiplication</h1>
+            {`구구단을 외자 구구단을 외자`}
+            <Calc multiNumber={multiNumber} addNum={addNum} />
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
